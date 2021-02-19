@@ -11,8 +11,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
-    app = QApplication(sys.argv)
-    myWin = MyWindow()
-    myWin.show()
-    sys.exit(app.exec_())
+    try:
+        os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+        app = QApplication(sys.argv)
+        myWin = MyWindow()
+        myWin.show()
+        sys.exit(app.exec_())
+    except Exception as e:
+        print(e)

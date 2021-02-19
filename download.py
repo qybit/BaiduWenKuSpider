@@ -6,8 +6,10 @@ import docx
 
 class DownloadDocx(object):
 
-    @staticmethod
-    def download(url):
+    def __init__(self):
+       self.READ_MORE_CLASS_NAME = 'foldpagewg-text-con'
+
+    def download(self, url):
         options = ChromeOptions()
         # 无界 Chrome 运行
         options.add_argument('--headless')
@@ -15,14 +17,19 @@ class DownloadDocx(object):
         options.add_argument('--window-size=1366,768')
         # UA 设置为 移动端
         options.add_argument(
-            'user-agent="Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"')
+            'user-agent="Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, '
+            'like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"')
         driver = webdriver.Chrome(options=options)
         driver.get(url)
-        # 若
+
         html = driver.page_source
         title = driver.find_element_by_class_name('doc-title').text
         try:
-            flod_page_text = driver.find_element_by_class_name('foldpagewg-text')
+            # 关闭文库卡
+            close_btn = driver.find_element_by_class_name('close-btn')
+            if close_btn is not None:
+                driver.execute_script("arguments[0].click();", close_btn)
+            flod_page_text = driver.find_element_by_class_name(self.READ_MORE_CLASS_NAME)
             driver.execute_script("arguments[0].click();", flod_page_text)  # 先点击一次
             process = driver.find_element_by_class_name('pagerwg-schedule').text[2:4]  # 获取文章进度
             html = driver.page_source
